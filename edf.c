@@ -163,6 +163,7 @@ void ready_sorted_enqueue(){
             task_status.remain_burst_t = tasks[i].burst_t;
             task_status.cpu_flag = 0;
             task_status.task = tasks[i];
+            task_status.remain_deadline = tasks[i].deadline + timer;
             sorted_enqueue(&ready_queue, task_status);
         }
         else if (timer > tasks[i].arrival_t && (timer - tasks[i].arrival_t) % tasks[i].deadline == 0)
@@ -174,7 +175,7 @@ void ready_sorted_enqueue(){
             task_status.remain_burst_t = tasks[i].burst_t;
             task_status.cpu_flag = 0;
             task_status.task = tasks[i];
-            task_status.remain_deadline = tasks[i].deadline;
+            task_status.remain_deadline = tasks[i].deadline + timer;
             sorted_enqueue(&ready_queue, task_status);
         }
     }
@@ -183,8 +184,31 @@ void ready_sorted_enqueue(){
 /*
     ready queue에 들어가 있는 task들의 속성들을 1초 업데이트 한다.
 */
-void update_ready_queue(){
-
+void update_ready_queue(Queue *queue) // deadline, response time, turnaround time, waiting
+{
+    Node * cur = queue->front;
+    if(queue->front != NULL)
+    {
+        for(int i = 0; i < queue->count; i++)
+        {
+            cur->data.turnaround_t += 1; // always increase
+            if(cur != queue->front)
+            {
+                cur->data.waiting_t += 1; // increasse waiting time when not grabbing cpu
+            }
+            if(cur->data.cpu_flag == 1)
+            {
+                cur->data.response_t += 1;
+            }
+            if(cur->data.remain_deadline > timer)
+            {
+                // dequeue
+            }
+            
+            cur = cur->next;
+        }
+    }
+    return;
 }
 
 /*
