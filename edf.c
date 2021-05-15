@@ -191,25 +191,25 @@ void update_ready_queue(){
     현재 CPU를 통해 실행중인 task의 속성들을 1초 업데이트 한다.
 */
 void update_running_task(){
-    TaskStatus running_task_status = ready_queue.front->data;
-    if (running_task_status.cpu_flag == -1)
+    TaskStatus * running_task_status =  &ready_queue.front->data;
+    if (running_task_status->cpu_flag == -1)
     {
         idle_time += 1;
         return;
     }
-    else if (running_task_status.cpu_flag == 0)
+    else if (running_task_status->cpu_flag == 0)
     {
-        running_task_status.cpu_flag = 1;
-        running_task_status.response_t = running_task_status.waiting_t;
+        running_task_status->cpu_flag = 1;
+        running_task_status->response_t = running_task_status->waiting_t;
     }
-    else if (running_task_status.cpu_flag == 1)
+    else if (running_task_status->cpu_flag == 1)
     {
-        running_task_status.remain_deadline -= 1;
-        running_task_status.remain_burst_t -= 1;
-        running_task_status.turnaround_t += 1;
+        running_task_status->remain_deadline -= 1;
+        running_task_status->remain_burst_t -= 1;
+        running_task_status->turnaround_t += 1;
     }
     
-    if (running_task_status.remain_burst_t <= 0)
+    if (running_task_status->remain_burst_t <= 0)
     {
         dequeue(&ready_queue);
         return;
