@@ -9,7 +9,6 @@
 int timer = 0;
 int idle_time = 0;
 
-// ?�로?�스 ?�행?? ?�요?? ?�보�? ?�는 구조�? (arrival time, burst time, deadline)
 typedef struct Task {
     int arrival_t;
     int burst_t;
@@ -73,6 +72,7 @@ void sorted_enqueue(Queue *queue, TaskStatus data)
     if (is_empty(queue))
     {
         queue->front = now;
+        queue->rear = now;
     }
     else
     {
