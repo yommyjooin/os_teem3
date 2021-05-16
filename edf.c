@@ -243,9 +243,30 @@ void update_running_task(){
 /*
     스케줄링의 전반적인 수행결과를 계산한다.
 */
-void cal_performance()
+void cal_performance(Queue* result)
 {
+    float tot_waiting_t = 0.0;
+    float tot_turnaround_t = 0.0;
+    float tot_response_t = 0.0;
+    float avg_waiting_t = 0.0;
+    float avg_turnaround_t = 0.0;
+    float avg_response_t = 0.0; 
+    int total_count = result->count;   
+    
+    while(result->count > 0){
+        TaskStatus task = dequeue(result);
+        tot_waiting_t += task.waiting_t;
+        tot_turnaround_t += task.turnaround_t;
+        tot_response_t += task.response_t;
+    }
 
+    avg_waiting_t = tot_waiting_t/total_count;
+    avg_turnaround_t = tot_turnaround_t/total_count;
+    avg_response_t = tot_response_t/total_count;
+
+    printf("avg waiting time: %.3f\n",avg_waiting_t);
+    printf("avg turnaround time: %.3f\n",avg_turnaround_t);
+    printf("avg response time: %.3f\n",avg_response_t);
 }
 
 int main(void){
@@ -257,6 +278,6 @@ int main(void){
         update_running_task();
         timer++;
     }
-    cal_performance();
+    // cal_performance();
     return 0;
 }
