@@ -31,7 +31,7 @@ typedef struct Node
     struct Node *next;
 }Node;
  
- 
+
 typedef struct Queue
 {
     Node *front;
