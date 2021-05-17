@@ -1,4 +1,3 @@
-//edf.c
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -10,7 +9,7 @@
 int timer = 0;
 int idle_time = 0;
 
-// 프로세스 실행에 필요한 정보를 담는 구조체 (arrival time, burst time, deadline)
+// ?„ë¡œ?¸ìŠ¤ ?¤í–‰?? ?„ìš”?? ?•ë³´ë¥? ?´ëŠ” êµ¬ì¡°ì²? (arrival time, burst time, deadline)
 typedef struct Task {
     int arrival_t;
     int burst_t;
@@ -34,30 +33,30 @@ typedef struct Node
 }Node;
  
  
-typedef struct Queue //Queue 구조체 정의
+typedef struct Queue //Queue êµ¬ì¡°ì²? ?•ì˜
 {
-    Node *front; //맨 앞(꺼낼 위치)
-    Node *rear; //맨 뒤(보관할 위치)
-    int count;//보관 개수
+    Node *front; //ë§? ??(êº¼ë‚¼ ?„ì¹˜)
+    Node *rear; //ë§? ??(ë³´ê??? ?„ì¹˜)
+    int count;//ë³´ê? ê°œìˆ˜
 }Queue;
  
-void init_queue(Queue *queue);//큐 초기화
-int is_empty(Queue *queue); //큐가 비었는지 확인
-void enqueue(Queue *queue, TaskStatus data); //큐에 보관
-void sorted_enqueue(Queue *queue, TaskStatus data); //큐에 보관
-TaskStatus dequeue(Queue *queue); //큐에서 꺼냄
- 
+void init_queue(Queue *queue);//?? ì´ˆê¸°??
+int is_empty(Queue *queue); //?ê? ë¹„ì—ˆ?”ì? ?•ì¸
+void enqueue(Queue *queue, TaskStatus data); //?ì— ë³´ê?
+void sorted_enqueue(Queue *queue, TaskStatus data); //?ì— ë³´ê?
+TaskStatus dequeue(Queue *queue); //?ì—?? êº¼ëƒ„
+
 Queue ready_queue;
- 
+
 void init_queue(Queue *queue)
 {
-    queue->front = queue->rear = NULL; //front와 rear를 NULL로 설정
-    queue->count = 0;//보관 개수를 0으로 설정
+    queue->front = queue->rear = NULL; //front?€ rearë¥? NULLë¡? ?¤ì •
+    queue->count = 0;//ë³´ê? ê°œìˆ˜ë¥? 0?¼ë¡œ ?¤ì •
 }
- 
+
 int is_empty(Queue *queue)
 {
-    return queue->count == 0;    //보관 개수가 0이면 빈 상태
+    return queue->count == 0;    //ë³´ê? ê°œìˆ˜ê°€ 0?´ë©´ ë¹? ?íƒœ
 }
 
 void enqueue(Queue *queue, TaskStatus data)
@@ -67,15 +66,15 @@ void enqueue(Queue *queue, TaskStatus data)
 
 void sorted_enqueue(Queue *queue, TaskStatus data)
 {
-    Node *now = (Node *)malloc(sizeof(Node)); //노드 생성
-    now->data = data;//데이터 설정
+    Node *now = (Node *)malloc(sizeof(Node)); //?¸ë“œ ?ì„±
+    now->data = data;//?°ì´?? ?¤ì •
     now->next = NULL;
  
-    if (is_empty(queue))//큐가 비어있을 때
+    if (is_empty(queue))//?ê? ë¹„ì–´?ˆì„ ??
     {
-        queue->front = now;//맨 앞을 now로 설정
+        queue->front = now;//ë§? ?žì„ nowë¡? ?¤ì •
     }
-    else//비어있지 않을 때
+    else//ë¹„ì–´?ˆì? ?Šì„ ??
     {
         Node * curr = queue->front;
         Node * prev = NULL;
@@ -86,13 +85,13 @@ void sorted_enqueue(Queue *queue, TaskStatus data)
             prev = curr;
             curr = curr->next;
         }
-        // enqueue 되는 값이 가장 작은 deadline을 가질 경우
+        // enqueue ?˜ëŠ” ê°’ì´ ê°€?? ?‘ì? deadline?? ê°€ì§? ê²½ìš°
         if (curr == queue->front)
         {
             now->next = queue->front;
             queue->front = now;
         }
-        // enqueue 되는 값이 가장 클 deadline을 가질 경우
+        // enqueue ?˜ëŠ” ê°’ì´ ê°€?? ?? deadline?? ê°€ì§? ê²½ìš°
         else if (curr == NULL)
         {
             now->next = NULL;
@@ -104,27 +103,27 @@ void sorted_enqueue(Queue *queue, TaskStatus data)
             now->next = curr;
         }
     }
-    queue->count++;//보관 개수를 1 증가
+    queue->count++;//ë³´ê? ê°œìˆ˜ë¥? 1 ì¦ê?
 }
  
 TaskStatus dequeue(Queue *queue)
 {
     TaskStatus re;
     Node *now;
-    if (is_empty(queue))//큐가 비었을 때
+    if (is_empty(queue))//?ê? ë¹„ì—ˆ?? ??
     {
         re.cpu_flag = -1;
         return re;
     }
-    now = queue->front;//맨 앞의 노드를 now에 기억
-    re = now->data;//반환할 값은 now의 data로 설정
-    queue->front = now->next;//맨 앞은 now의 다음 노드로 설정
-    free(now);//now 소멸
-    queue->count--;//보관 개수를 1 감소
+    now = queue->front;//ë§? ?žì˜ ?¸ë“œë¥? now?? ê¸°ì–µ
+    re = now->data;//ë°˜í™˜?? ê°’ì? now?? dataë¡? ?¤ì •
+    queue->front = now->next;//ë§? ?žì? now?? ?¤ìŒ ?¸ë“œë¡? ?¤ì •
+    free(now);//now ?Œë©¸
+    queue->count--;//ë³´ê? ê°œìˆ˜ë¥? 1 ê°ì†Œ
     return re;
 }
 
-// 프로세스 실행 정보들의 배열
+// ?„ë¡œ?¸ìŠ¤ ?¤í–‰ ?•ë³´?¤ì˜ ë°°ì—´
 Task tasks[MAX_CNT];
 
 void input_read(){
@@ -134,7 +133,7 @@ void input_read(){
     int file_size = 0;
     FILE * fp;
     
-    /* 파일을 연다. */
+    /* ?Œì¼?? ?°ë‹¤. */
     if ((fp = fopen(resource_path, "rb")) == NULL) {
         return;
     }
@@ -182,7 +181,7 @@ void ready_sorted_enqueue(){
 }
 
 /*
-    ready queue에 들어가 있는 task들의 속성들을 1초 업데이트 한다.
+    ready queue?? ?¤ì–´ê°€ ?ˆëŠ” task?¤ì˜ ?ì„±?¤ì„ 1ì´? ?…ë°?´íŠ¸ ?œë‹¤.
 */
 void update_ready_queue(Queue *queue) // deadline, response time, turnaround time, waiting
 {
@@ -212,7 +211,7 @@ void update_ready_queue(Queue *queue) // deadline, response time, turnaround tim
 }
 
 /*
-    현재 CPU를 통해 실행중인 task의 속성들을 1초 업데이트 한다.
+    ?„ìž¬ CPUë¥? ?µí•´ ?¤í–‰ì¤‘ì¸ task?? ?ì„±?¤ì„ 1ì´? ?…ë°?´íŠ¸ ?œë‹¤.
 */
 void update_running_task(){
     TaskStatus * running_task_status =  &ready_queue.front->data;
@@ -241,7 +240,7 @@ void update_running_task(){
 }
 
 /*
-    스케줄링의 전반적인 수행결과를 계산한다.
+    ?¤ì?ì¤„ë§?? ?„ë°˜?ì¸ ?˜í–‰ê²°ê³¼ë¥? ê³„ì‚°?œë‹¤.
 */
 void cal_performance(Queue* result)
 {
