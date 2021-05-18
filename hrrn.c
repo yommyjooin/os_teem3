@@ -3,8 +3,9 @@
 
 int main() {
 
-	struct Queue *hrrn_queue = malloc(sizeof(struct Queue));
-
+	struct Queue *hrrn_queue = malloc(sizeof(struct Queue)); //Creating queue contain processes
+	
+	//Return 1 and quit if failed to load text file
 	if (parseProcess(hrrn_queue)) {
 		return 1;
 	}
@@ -14,11 +15,18 @@ int main() {
 	printf("\nId\tArrival Time\tBurst Time\tWating Time");
 	printf("\tTurnAround Time\t Normalized TT");
 
-	for (hrrn_queue->cur_time = hrrn_queue->front->p->at; hrrn_queue->cur_time < hrrn_queue->sum_bt && hrrn_queue->size > 0;) {
+	while (hrrn_queue->size > 0) {
 		
-		moveCursor(hrrn_queue);
+		struct Process *target = moveCursor(hrrn_queue); //Getting hightest response ratio process
 
-		printBursted(hrrn_queue);
+		hrrn_queue->cur_time += target->bt; //Updating current time;
+		
+		updateProcessInfo(target, hrrn_queue->cur_time);
+
+		hrrn_queue->avgtt += target->tt; //Adding turn around time of process to total turn around time
+		hrrn_queue->avgwt += target->wt; //Adding waiting time of process to total waiting time
+
+		printBursted(target);
 		dequeue(hrrn_queue);
 	}
 

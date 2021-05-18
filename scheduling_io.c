@@ -1,5 +1,6 @@
 #include "scheduling_io.h"
 
+//Parsing process information from text file
 int parseProcess(struct Queue *queue) {
 	printf("%s", input_data_path);
 	char *resource_path = input_data_path;
@@ -13,48 +14,28 @@ int parseProcess(struct Queue *queue) {
 	for(int i = 0; fgets(buffer, MAX_LINE_LENGTH, fp) != NULL; i++){
 
 		struct Node *new_node = malloc(sizeof(struct Node));
-		struct Process *new_process = malloc(sizeof(struct Process));
-		char * temp = strtok(buffer, " ");
+		char *temp = strtok(buffer, " ");
 
-		new_node->p = new_process;
-		new_node->p->p_num = atoi(temp);
-
+		int p_num = atoi(temp); //Process id
         	temp = strtok(NULL, " ");
 
-		new_node->p->at = atoi(temp);
-
+		int p_at = atoi(temp); //Process arrival time
         	temp = strtok(NULL, " ");
 
-		new_node->p->bt = atoi(temp);
-        	new_node->p->completed = 0;
+		int p_bt = atoi(temp); //Process burst time
+		
+		new_node->p = createProcess(p_num, p_at, p_bt);
 
-		queue->sum_bt += new_node->p->bt;
+		queue->sum_bt += new_node->p->bt; //Adding total process burst time
 		enqueue(queue, new_node);
 	}
 	fclose(fp);
-
-	queue->avgtt = 0;
-	queue->avgwt = 0;
-	queue->hrr = -9999;
-	queue->cursor = 0;
-	
 	return 0;
 }
 
-void printBursted(struct Queue *queue) {
-	struct Process *target = getNode(queue, queue->cursor)->p;
-
-	queue->cur_time += target->bt;
-	target->wt = queue->cur_time - target->at - target->bt;
-	target->tt = queue->cur_time - target->at;
-
-	queue->avgtt += target->tt;
-	target->ntt = ((float)target->tt / target->bt);
-
-	target->completed = 1;
-	queue->avgwt += target->wt;
-
-	printf("\n%d\t\t%d\t\t", target->p_num, target->at);
-	printf("%d\t\t%d\t\t", target->bt, target->wt);
-	printf("%d\t\t%f", target->tt, target->ntt);
+//Printing information of completed process
+void printBursted(struct Process *p) {
+	printf("\n%d\t\t%d\t\t", p->p_num, p->at);
+	printf("%d\t\t%d\t\t", p->bt, p->wt);
+	printf("%d\t\t%f", p->tt, p->ntt);
 }

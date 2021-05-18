@@ -1,17 +1,28 @@
 #include "hrrn_queue.h"
 
+//Sorting of processes by arrival time
 void sortByArrival(struct Queue *queue) {
 
 	struct Node *cur_node = queue->front;
 	struct Node *prev_node = NULL;
 
+	//Initalizing queue
+	queue->avgtt = 0;
+	queue->avgwt = 0;
+	queue->hrr = -9999;
+	queue->cursor = 0;
+	queue->cur_time = queue->front->p->at;
+
 	while (cur_node->next != NULL) {
+
+		//Check for the lesser arrival time
 		if (cur_node->p->at > cur_node->next->p->at) {
  
 			if (prev_node != NULL) {
 				prev_node->next = cur_node->next;
 			}
 
+			//Swap earlier process to front
 			cur_node->next = cur_node->next->next;
 			prev_node->next->next = cur_node;
 			cur_node = prev_node->next;
@@ -22,8 +33,7 @@ void sortByArrival(struct Queue *queue) {
 	}
 }
 
- 
-
+//Enqueueing process
 void enqueue(struct Queue *queue, struct Node *new_node) {
 
 	if (queue->front == NULL || queue->rear == NULL) {
@@ -39,6 +49,7 @@ void enqueue(struct Queue *queue, struct Node *new_node) {
 	queue->max_size++;
 }
 
+//Dequeueing process with cursor
 void dequeue(struct Queue *queue) {
 
 	if (queue->cursor == 0) {
@@ -60,6 +71,7 @@ void dequeue(struct Queue *queue) {
 	queue->size--;
 }
 
+//Return node at given index
 struct Node *getNode(struct Queue *queue, int cursor) {
 
 	struct Node *cur_node = queue->front;
@@ -74,18 +86,22 @@ struct Node *getNode(struct Queue *queue, int cursor) {
 
 }
 
-void moveCursor(struct Queue *queue) {
+//Update cursor to Node with highest response ratio process and return it's process
+struct Process *moveCursor(struct Queue *queue) {
 	queue->cursor = 0;
 	struct Node *cur_node = queue->front;
 
-	float temp;
-	int i = 0;
+	float temp; //Response ratio of process in current node
+	int i = 0; //Index of process with highest reponse ratio
 
 	while (cur_node != NULL && queue->size > 1) {
+
+		//Check if the process has arrived and incomplete
 		if (cur_node->p->at <= queue->cur_time && cur_node->p->completed != 1) {
-
+			
 			temp = (cur_node->p->bt + (queue->cur_time - cur_node->p->at)) / cur_node->p->bt;
-
+			
+			//Check if it is highest response ratio
 			if (queue->hrr < temp) {
 				queue->hrr = temp;
 				queue->cursor = i;
@@ -95,4 +111,6 @@ void moveCursor(struct Queue *queue) {
 		cur_node = cur_node->next;
 		i++;
 	}
+	
+	return getNode(queue, queue->cursor)->p;
 }

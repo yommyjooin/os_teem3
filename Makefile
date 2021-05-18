@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -g -Wall
-OBJS1 = hrrn_queue.o scheduling_io.o hrrn.o
+OBJS1 = hrrn_process.o hrrn_queue.o scheduling_io.o hrrn.o
 OBJS2 = edf.o
 TARGET = hrrn edf
 

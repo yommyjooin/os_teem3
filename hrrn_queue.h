@@ -1,16 +1,7 @@
 #ifndef __HRRN_QUEUE_H
 #define __HRRN_QUEUE_H
 
-#include <stdio.h>
-
-typedef struct Process {
-
-	int p_num;
-	int at, bt, ct, wt, tt;
-	int completed;
-	float ntt;
-
-} Process;
+#include "hrrn_process.h"
 
 typedef struct Node {
 
@@ -22,14 +13,14 @@ typedef struct Node {
  
 typedef struct Queue {
 
-	int sum_bt;
-	int size;
-	int max_size;
-	int cursor;
-	int cur_time;
-	float hrr;
-	float avgwt;
-	float avgtt;
+	int sum_bt;	//Total burst time of processes
+	int size;	//Number of processes in queue
+	int max_size;	//Total number of processes
+	int cursor;	//Currently executing process index
+	int cur_time;	//Current time
+	float hrr;	//Highest response ratio
+	float avgwt;	//Total wating time
+	float avgtt;	//Total turn-around time
 
 	struct Node *front;
 	struct Node *rear;
@@ -40,6 +31,6 @@ void enqueue(struct Queue *queue, struct Node *new_node);
 void dequeue(struct Queue *queue);
 void sortByArrival(struct Queue *queue);
 struct Node *getNode(struct Queue *queue, int cursor);
-void moveCursor(struct Queue *queue);
+struct Process *moveCursor(struct Queue *queue);
 
 #endif

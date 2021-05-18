@@ -8,10 +8,10 @@
 
 #define MAX_CNT 5
 #define MAX_LINE_LENGTH 20
-#define input_data_path "./hrrn_task_data.txt"
+#define input_data_path "./hrrn_task_data.txt" //Path of text file including processes information
 
 int parseProcess(struct Queue *queue);
-void printBursted(struct Queue *queue);
+void printBursted(struct Process *p);
 
 #endif
 
