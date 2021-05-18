@@ -1,17 +1,14 @@
-CC = gcc
-CFLAGS = -g -Wall
-OBJS1 = hrrn_process.o hrrn_queue.o scheduling_io.o hrrn.o
-OBJS2 = edf.o
-TARGET = hrrn edf
+DIRS = hrrn_lib hrrn_main
+.PHONY: all clean
 
-all: $(TARGET)
+all:
+	@for d in $(DIRS); \
+	do \
+		$(MAKE) -C $$d; \
+	done
 
-hrrn: $(OBJS1)
-	$(CC) -o $@ $(OBJS1)
-
-edf: $(OBJS2)
-	$(CC) -o $@ $(OBJS2)
-
-clean: 
-	rm -f *.o
-	rm -f $(TARGET)
+clean:
+	@for d in $(DIRS); \
+	do \
+		$(MAKE) -C $$d clean; \
+	done
