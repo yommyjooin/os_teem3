@@ -329,6 +329,21 @@ int mainmainmainmainmain(){ // original main
     return 0;
 }
 
+// void report_completed_queue(Queue *queue)
+// {
+//     Node * cur = queue->front;
+//     printf("-----REPORT-----\n");
+//     while(!is_empty(queue))
+//     {
+//         TaskStatus data = dequeue(queue);
+//         printf("PID : %3d response : %5d turnaround : %5d waiting : %5d remain_burst : %5d\n",
+//             data.task.pid, data.response_t, data.turnaround_t, data.waiting_t, data.remain_burst_t);
+//         cur = cur->next;
+//     }
+//     printf("-----END-----\n\n");
+//     return;
+// }
+
 int is_completed()
 {
     if(task_num == dequeued_task) // break loop when the number of tasks in txt file and dequeued task is same
