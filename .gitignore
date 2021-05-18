@@ -3,5 +3,4 @@
 *.txt
 *.o
 *.a
-hrrn
-edf
+*!*.*
