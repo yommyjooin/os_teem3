@@ -1,9 +1,7 @@
 ## Ignore listed Files ##
 
-*
-!*.*
-!README
-!Makefile
 *.txt
 *.o
 *.a
+hrrn
+edf
