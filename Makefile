@@ -1,9 +1,14 @@
-hrrn : hrrn.c
-	gcc -o hrrn hrrn.c
+DIRS = hrrn_lib hrrn_main edf_main
+.PHONY: all clean
 
-edf : edf.c
-	gcc -o edf edf.c
+all:
+	@for d in $(DIRS); \
+	do \
+		$(MAKE) -C $$d; \
+	done
 
 clean:
-	rm edf
-	rm hrrn
+	@for d in $(DIRS); \
+	do \
+		$(MAKE) -C $$d clean; \
+	done
