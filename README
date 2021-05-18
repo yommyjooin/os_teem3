@@ -1,0 +1,7 @@
+Process Scheduler with HRRN and EDF algorithm.
+For input txt, write process_id, arrival time, burst time for each process in each line. Each arguments are tokenized by blank.
+Input txt must be located in data folder.
+
+***Executing HRRN***
+1. Execute 'make' command in os_teem3 directory then executable file hrrn will be created.
+2. Execute command './hrrn'
