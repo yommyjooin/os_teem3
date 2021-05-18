@@ -1,4 +1,4 @@
-DIRS = hrrn_lib hrrn_main
+DIRS = hrrn_lib hrrn_main edf_main
 .PHONY: all clean
 
 all:

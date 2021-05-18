@@ -4,12 +4,11 @@
 
 #define MAX_CNT 2
 #define MAX_LINE_LENGTH 20
-#define input_data_path "./edf_task_data.txt"
+#define input_data_path "./data/edf_task_data.txt"
 
 int timer = 0;
 int idle_time = 0;
 
-// ?„ë¡œ?¸ìŠ¤ ?¤í–‰?? ?„ìš”?? ?•ë³´ë¥? ?´ëŠ” êµ¬ì¡°ì²? (arrival time, burst time, deadline)
 typedef struct Task {
     int arrival_t;
     int burst_t;
@@ -32,31 +31,31 @@ typedef struct Node
     struct Node *next;
 }Node;
  
- 
-typedef struct Queue //Queue êµ¬ì¡°ì²? ?•ì˜
+
+typedef struct Queue
 {
-    Node *front; //ë§? ??(êº¼ë‚¼ ?„ì¹˜)
-    Node *rear; //ë§? ??(ë³´ê??? ?„ì¹˜)
-    int count;//ë³´ê? ê°œìˆ˜
+    Node *front;
+    Node *rear;
+    int count;
 }Queue;
  
-void init_queue(Queue *queue);//?? ì´ˆê¸°??
-int is_empty(Queue *queue); //?ê? ë¹„ì—ˆ?”ì? ?•ì¸
-void enqueue(Queue *queue, TaskStatus data); //?ì— ë³´ê?
-void sorted_enqueue(Queue *queue, TaskStatus data); //?ì— ë³´ê?
-TaskStatus dequeue(Queue *queue); //?ì—?? êº¼ëƒ„
+void init_queue(Queue *queue);
+int is_empty(Queue *queue);
+void enqueue(Queue *queue, TaskStatus data);
+void sorted_enqueue(Queue *queue, TaskStatus data);
+TaskStatus dequeue(Queue *queue);
 
 Queue ready_queue;
 
 void init_queue(Queue *queue)
 {
-    queue->front = queue->rear = NULL; //front?€ rearë¥? NULLë¡? ?¤ì •
-    queue->count = 0;//ë³´ê? ê°œìˆ˜ë¥? 0?¼ë¡œ ?¤ì •
+    queue->front = queue->rear = NULL;
+    queue->count = 0;
 }
 
 int is_empty(Queue *queue)
 {
-    return queue->count == 0;    //ë³´ê? ê°œìˆ˜ê°€ 0?´ë©´ ë¹? ?íƒœ
+    return queue->count == 0;
 }
 
 void enqueue(Queue *queue, TaskStatus data)
@@ -66,15 +65,16 @@ void enqueue(Queue *queue, TaskStatus data)
 
 void sorted_enqueue(Queue *queue, TaskStatus data)
 {
-    Node *now = (Node *)malloc(sizeof(Node)); //?¸ë“œ ?ì„±
-    now->data = data;//?°ì´?? ?¤ì •
+    Node *now = (Node *)malloc(sizeof(Node));
+    now->data = data;
     now->next = NULL;
  
-    if (is_empty(queue))//?ê? ë¹„ì–´?ˆì„ ??
+    if (is_empty(queue))
     {
-        queue->front = now;//ë§? ?ì„ nowë¡? ?¤ì •
+        queue->front = now;
+        queue->rear = now;
     }
-    else//ë¹„ì–´?ˆì? ?Šì„ ??
+    else
     {
         Node * curr = queue->front;
         Node * prev = NULL;
@@ -85,13 +85,11 @@ void sorted_enqueue(Queue *queue, TaskStatus data)
             prev = curr;
             curr = curr->next;
         }
-        // enqueue ?˜ëŠ” ê°’ì´ ê°€?? ?‘ì? deadline?? ê°€ì§? ê²½ìš°
         if (curr == queue->front)
         {
             now->next = queue->front;
             queue->front = now;
         }
-        // enqueue ?˜ëŠ” ê°’ì´ ê°€?? ?? deadline?? ê°€ì§? ê²½ìš°
         else if (curr == NULL)
         {
             now->next = NULL;
@@ -103,27 +101,26 @@ void sorted_enqueue(Queue *queue, TaskStatus data)
             now->next = curr;
         }
     }
-    queue->count++;//ë³´ê? ê°œìˆ˜ë¥? 1 ì¦ê?
+    queue->count++;
 }
  
 TaskStatus dequeue(Queue *queue)
 {
     TaskStatus re;
     Node *now;
-    if (is_empty(queue))//?ê? ë¹„ì—ˆ?? ??
+    if (is_empty(queue))
     {
         re.cpu_flag = -1;
         return re;
     }
-    now = queue->front;//ë§? ?ì˜ ?¸ë“œë¥? now?? ê¸°ì–µ
-    re = now->data;//ë°˜í™˜?? ê°’ì? now?? dataë¡? ?¤ì •
-    queue->front = now->next;//ë§? ?ì? now?? ?¤ìŒ ?¸ë“œë¡? ?¤ì •
-    free(now);//now ?Œë©¸
-    queue->count--;//ë³´ê? ê°œìˆ˜ë¥? 1 ê°ì†Œ
+    now = queue->front;
+    re = now->data;
+    queue->front = now->next;
+    free(now);
+    queue->count--;
     return re;
 }
 
-// ?„ë¡œ?¸ìŠ¤ ?¤í–‰ ?•ë³´?¤ì˜ ë°°ì—´
 Task tasks[MAX_CNT];
 
 void input_read(){
@@ -133,7 +130,6 @@ void input_read(){
     int file_size = 0;
     FILE * fp;
     
-    /* ?Œì¼?? ?°ë‹¤. */
     if ((fp = fopen(resource_path, "rb")) == NULL) {
         return;
     }
@@ -180,9 +176,6 @@ void ready_sorted_enqueue(){
     }
 }
 
-/*
-    ready queue?? ?¤ì–´ê°€ ?ˆëŠ” task?¤ì˜ ?ì„±?¤ì„ 1ì´? ?…ë°?´íŠ¸ ?œë‹¤.
-*/
 void update_ready_queue(Queue *queue) // deadline, response time, turnaround time, waiting
 {
     Node * cur = queue->front;
@@ -210,9 +203,6 @@ void update_ready_queue(Queue *queue) // deadline, response time, turnaround tim
     return;
 }
 
-/*
-    ?„ì¬ CPUë¥? ?µí•´ ?¤í–‰ì¤‘ì¸ task?? ?ì„±?¤ì„ 1ì´? ?…ë°?´íŠ¸ ?œë‹¤.
-*/
 void update_running_task(){
     TaskStatus * running_task_status =  &ready_queue.front->data;
     if (running_task_status->cpu_flag == -1)
@@ -239,9 +229,6 @@ void update_running_task(){
     }
 }
 
-/*
-    ?¤ì?ì¤„ë§?? ?„ë°˜?ì¸ ?˜í–‰ê²°ê³¼ë¥? ê³„ì‚°?œë‹¤.
-*/
 void cal_performance(Queue* result)
 {
     float tot_waiting_t = 0.0;
@@ -273,7 +260,7 @@ int main(void){
     input_read();
     while(timer < 160){
         ready_sorted_enqueue();
-        update_ready_queue();
+        update_ready_queue(&ready_queue);
         update_running_task();
         timer++;
     }
