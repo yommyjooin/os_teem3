@@ -1,2 +1,0 @@
-Process Scheduler with HRRN and EDF algorithm.
-For input txt, write process_id, arrival time, burst time for each process in each line. Each arguments are tokenized by blank.
