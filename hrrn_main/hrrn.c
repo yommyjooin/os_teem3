@@ -28,10 +28,12 @@ int main() {
 
 		printBursted(target);
 		dequeue(hrrn_queue);
+		parseGantt(hrrn_queue, target);
 	}
 
 	printf("\nAverage waiting time:%f\n", hrrn_queue->avgwt / hrrn_queue->max_size);
 	printf("Average Turn Around time:%f\n", hrrn_queue->avgtt / hrrn_queue->max_size);
+	printText(hrrn_queue);
 
 	return 0;
 }

@@ -2,6 +2,7 @@
 #define __HRRN_QUEUE_H
 
 #include "hrrn_process.h"
+#include <string.h>
 
 typedef struct Node {
 
@@ -21,6 +22,7 @@ typedef struct Queue {
 	float hrr;	//Highest response ratio
 	float avgwt;	//Total wating time
 	float avgtt;	//Total turn-around time
+	char data[120];
 
 	struct Node *front;
 	struct Node *rear;
@@ -32,5 +34,6 @@ void dequeue(struct Queue *queue);
 void sortByArrival(struct Queue *queue);
 struct Node *getNode(struct Queue *queue, int cursor);
 struct Process *moveCursor(struct Queue *queue);
+void parseGantt(struct Queue *queue, struct Process *p);
 
 #endif

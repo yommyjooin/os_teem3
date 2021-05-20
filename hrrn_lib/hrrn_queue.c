@@ -2,35 +2,40 @@
 
 //Sorting of processes by arrival time
 void sortByArrival(struct Queue *queue) {
-
-	struct Node *cur_node = queue->front;
-	struct Node *prev_node = NULL;
+	
+	struct Node *node_array[queue->size];
+	int size = queue->size;
+	struct Node *temp;
 
 	//Initalizing queue
 	queue->avgtt = 0;
 	queue->avgwt = 0;
 	queue->hrr = -9999;
 	queue->cursor = 0;
-	queue->cur_time = queue->front->p->at;
 
-	while (cur_node->next != NULL) {
-
-		//Check for the lesser arrival time
-		if (cur_node->p->at > cur_node->next->p->at) {
- 
-			if (prev_node != NULL) {
-				prev_node->next = cur_node->next;
-			}
-
-			//Swap earlier process to front
-			cur_node->next = cur_node->next->next;
-			prev_node->next->next = cur_node;
-			cur_node = prev_node->next;
-		}
-
-		prev_node = cur_node;
-		cur_node = cur_node->next;
+	for (int i = 0; queue->front != NULL; i++) {
+		node_array[i] = queue->front;
+		dequeue(queue);
 	}
+
+	for (int i = 0; i < size-1; i++) {
+		for (int j = i+1; j < size; j++) {
+			//Check for the lesser arrival time
+			if (node_array[i]->p->at > node_array[j]->p->at) {
+				
+				//Swap earlier process to front
+				temp = node_array[i];
+				node_array[i] = node_array[j];
+				node_array[j] = temp;
+			}
+		}
+	}
+
+	for (int i = 0; i < size; i++) {
+		enqueue(queue, node_array[i]);
+	}
+
+	queue->cur_time = queue->front->p->at;
 }
 
 //Enqueueing process
@@ -46,26 +51,30 @@ void enqueue(struct Queue *queue, struct Node *new_node) {
 	}
 	
 	queue->size++;
-	queue->max_size++;
 }
 
 //Dequeueing process with cursor
 void dequeue(struct Queue *queue) {
-
+	
+	struct Node *dequeued;
 	if (queue->cursor == 0) {
 		if (queue->front != NULL) {
+			dequeued = queue->front;
 			queue->front = queue->front->next;
 			if(queue->front == NULL) {
 				queue->rear = NULL;		
 			}
+			dequeued->next = NULL;
 		}
 	}
 	else {
 		struct Node *prevNode = getNode(queue, queue->cursor-1);
+		dequeued = getNode(queue, queue->cursor);
 		prevNode->next = getNode(queue, queue->cursor)->next;
 		if (queue->cursor == queue->size-1) {
 			queue->rear = prevNode;
 		}
+		dequeued->next = NULL;
 	}
 
 	queue->size--;
@@ -113,4 +122,20 @@ struct Process *moveCursor(struct Queue *queue) {
 	}
 	
 	return getNode(queue, queue->cursor)->p;
+}
+
+void parseGantt(struct Queue *queue, struct Process *p) {
+	char p_id[10] = "";
+	
+	sprintf(p_id, "%d ", p->p_num);
+	
+	if (queue->size+1 == queue->max_size) {
+		for (int i = 0; i < p->at; i++) {
+			strcat(queue->data, "0 ");
+		}
+	}
+
+	for (int i = 0; i < p->bt; i++) {
+		strcat(queue->data, p_id);
+	}
 }

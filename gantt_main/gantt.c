@@ -121,7 +121,7 @@ void print_gantt(){
 }
 
 int main(void){
-    char gantt_dir[] = "../data/gantt";
+    char gantt_dir[] = "./data/gantt";
     DIR *d;
     struct dirent *dir;
     d = opendir(gantt_dir);
