@@ -4,8 +4,8 @@
 int parseProcess(struct Queue *queue) {
 	printf("%s", input_data_path);
 	char *resource_path = input_data_path;
-    	char buffer[MAX_LINE_LENGTH];
-    	FILE * fp;
+    char buffer[MAX_LINE_LENGTH];
+    FILE * fp;
 
 	if ((fp = fopen(resource_path, "rb")) == NULL) {
 		return 1;
@@ -27,15 +27,26 @@ int parseProcess(struct Queue *queue) {
 		new_node->p = createProcess(p_num, p_at, p_bt);
 
 		queue->sum_bt += new_node->p->bt; //Adding total process burst time
+		queue->max_size++;
 		enqueue(queue, new_node);
 	}
+
 	fclose(fp);
 	return 0;
 }
 
 //Printing information of completed process
 void printBursted(struct Process *p) {
+	
 	printf("\n%d\t\t%d\t\t", p->p_num, p->at);
 	printf("%d\t\t%d\t\t", p->bt, p->wt);
 	printf("%d\t\t%f", p->tt, p->ntt);
+}
+
+void printText(struct Queue *queue) {
+	FILE *fp = fopen("./data/gantt/hrrn_gantt.txt", "w+");
+	
+	fputs(queue->data, fp);
+
+	fclose(fp);
 }

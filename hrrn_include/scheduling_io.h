@@ -12,6 +12,7 @@
 
 int parseProcess(struct Queue *queue);
 void printBursted(struct Process *p);
+void printText(struct Queue *queue);
 
 #endif
 
