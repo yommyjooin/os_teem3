@@ -367,7 +367,8 @@ void new_input_read(char* filename) // not using const string, using parameter t
     FILE * fp;
     
     if ((fp = fopen(resource_path, "rb")) == NULL) {
-        perror("file read failed\n");
+        printf("file read failed : %s\n", resource_path);
+        perror("");
         return;
     }
     printf("\nCurrent txt file is : %s\n", filename); // debug option
@@ -422,7 +423,7 @@ int sim_gantt(char* filename){ // only works in ./edf_task_data.txt
     new_input_read(filename);
 
     FILE * fp;
-    if((fp = fopen("./gantt.txt", "wb")) == -1)
+    if((fp = fopen("./data/gantt/gantt.txt", "wb")) == -1)
     {
         perror("failed to open ./gantt.txt");
         return -1;
@@ -454,9 +455,10 @@ int parse_file_name(char* filename) // return 1 if file name contains .txt  new
 
 int main(void)
 {
+    char test_dir[] = "./edf_test";
     DIR *d;
     struct dirent *dir;
-    d = opendir(".");
+    d = opendir(test_dir);
     if (d)
     {
         char * filename = malloc(sizeof(char) * 100);
@@ -465,10 +467,10 @@ int main(void)
             if(parse_file_name(dir->d_name)) // if the directory has a .txt file, then this is true
             {
                 memset(filename, 0, 100);
-                strcat(filename, "./");
+                strcat(filename, "./edf_test/");
                 strcat(filename, dir->d_name);
                 strcat(filename, ".txt");
-                if(strcmp(filename, "./edf_task_data.txt") == 0)
+                if(strcmp(filename, "./edf_test/edf_task_data.txt") == 0)
                 {
                     printf("--writing gantt--\n");
                     sim_gantt(filename); // write txt data for gantt chart
