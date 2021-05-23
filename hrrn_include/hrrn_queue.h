@@ -1,31 +1,32 @@
-#ifndef __HRRN_QUEUE_H
-#define __HRRN_QUEUE_H
+#ifndef HRRN_QUEUE_H
+#define HRRN_QUEUE_H
 
 #include "hrrn_process.h"
 #include <string.h>
 
 typedef struct Node {
 
-	struct Node *next;
-	struct Process *p;
+    struct Node *next;
+    struct Process *p;
 
 } Node;
 
  
 typedef struct Queue {
 
-	int sum_bt;	//Total burst time of processes
-	int size;	//Number of processes in queue
-	int max_size;	//Total number of processes
-	int cursor;	//Currently executing process index
-	int cur_time;	//Current time
-	float hrr;	//Highest response ratio
-	float avgwt;	//Total wating time
-	float avgtt;	//Total turn-around time
-	char data[120];
+    int sum_bt;    //Total burst time of processes
+    int size;    //Number of processes in queue
+    int max_size;    //Total number of processes
+    int cursor;    //Currently executing process index
+    int cur_time;    //Current time
+    float hrr;    //Highest response ratio
+    float avgwt;    //Total wating time
+    float avgtt;    //Total turn-around time
+    float avgrt;    //Total response time
+    char data[120];
 
-	struct Node *front;
-	struct Node *rear;
+    struct Node *front;
+    struct Node *rear;
 
 } Queue;
 
