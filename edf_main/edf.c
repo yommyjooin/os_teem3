@@ -336,6 +336,8 @@ void cal_performance(Queue* result)
     float avg_waiting_t = 0.0;
     float avg_turnaround_t = 0.0;
     float avg_response_t = 0.0; 
+    float cpu_utilization = 0.0; 
+    float throughput = 0.0; 
     int total_count = result->count;   
     
     printf("\n");
@@ -351,10 +353,14 @@ void cal_performance(Queue* result)
     avg_waiting_t = tot_waiting_t/total_count;
     avg_turnaround_t = tot_turnaround_t/total_count;
     avg_response_t = tot_response_t/total_count;
+    cpu_utilization = 1.0 - (float)idle_time/timer;
+    throughput = (float)total_count/timer;
 
-    printf("avg waiting time: %.3f\n",avg_waiting_t);
-    printf("avg turnaround time: %.3f\n",avg_turnaround_t);
-    printf("avg response time: %.3f\n",avg_response_t);
+    printf("avg waiting time: %.3f sec\n",avg_waiting_t);
+    printf("avg turnaround time: %.3f sec\n",avg_turnaround_t);
+    printf("avg response time: %.3f sec\n",avg_response_t);
+    printf("cpu utilization: %.3f\n",cpu_utilization);
+    printf("throughput: %.3f (process/sec)\n",throughput);
 }
 
 void new_input_read(char* filename) // not using const string, using parameter to read file
