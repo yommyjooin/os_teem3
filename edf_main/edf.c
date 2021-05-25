@@ -447,7 +447,6 @@ int sim_gantt(char* filename){ // only works in ./edf_task_data.txt
     return 0;
 }
 
-
 int parse_file_name(char* filename) // return 1 if file name contains .txt  new
 {
 	strtok(filename, ".");
@@ -487,7 +486,6 @@ int main(void)
                 }
                 timer = 0; // should report total time before this line
             }
-
         }
         free(filename);
     }

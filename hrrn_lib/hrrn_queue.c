@@ -124,18 +124,35 @@ struct Process *moveCursor(struct Queue *queue) {
 	return getNode(queue, queue->cursor)->p;
 }
 
-void parseGantt(struct Queue *queue, struct Process *p) {
-	char p_id[10] = "";
+void parseGantt(struct Queue *queue, struct Process *p, int ended_time) {
+	char data_token[10] = "";
 	
-	sprintf(p_id, "%d ", p->p_num);
-	
+	sprintf(data_token, "%d ", p->p_num);
+
+	int token_len = strlen(data_token);
+	char *data_line = (char*)calloc(token_len * p->bt + 1, sizeof(char));
+
+	//If it is first process
 	if (queue->size+1 == queue->max_size) {
+		data_line = realloc(data_line, sizeof(char) * (token_len * (p->at + p->bt) + 1));
 		for (int i = 0; i < p->at; i++) {
-			strcat(queue->data, "0 ");
+			strcat(data_line, "0 "); //Checking arrival time and storing 0 for running time before first process arrived
 		}
+	}
+	//If there are terms with previous process
+	else if (ended_time < p->at) {
+		data_line = realloc(data_line, sizeof(char) * (token_len * ((p->at - ended_time) + p->bt) + 1));
+		for (int i = 0; i < p->at - ended_time; i++) {
+			strcat(data_line, "0 "); //Storing 0 for voided running time
+		}		
+	}
+	else {
+		data_line = (char*)calloc(token_len * p->bt + 1, sizeof(char));
 	}
 
 	for (int i = 0; i < p->bt; i++) {
-		strcat(queue->data, p_id);
+		strcat(data_line, data_token); //Storing process number for running time
 	}
+	
+	queue->data[queue->max_size - queue->size - 1] = data_line;
 }
