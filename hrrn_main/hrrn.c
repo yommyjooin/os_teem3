@@ -1,9 +1,6 @@
 #include "hrrn_queue.h"
 #include "scheduling_io.h"
 
-<<<<<<< HEAD
-
-
 int main() {
 
 	struct Queue *hrrn_queue = (Queue*)malloc(sizeof(struct Queue)); //Creating queue contain processes
@@ -42,14 +39,16 @@ int main() {
 
 		hrrn_queue->avgtt += target->tt; //Adding turn around time of process to total turn around time
 		hrrn_queue->avgwt += target->wt; //Adding waiting time of process to total waiting time
+		hrrn_queue->avgrt += target->rt; //Adding response time of process to total response time
 		
 		printBursted(target);
 		dequeue(hrrn_queue);
 		parseGantt(hrrn_queue, target, prev_ended_time);
 	}
 
-	printf("\nAverage waiting time:%f\n", hrrn_queue->avgwt / hrrn_queue->max_size);
-	printf("Average Turn Around time:%f\n", hrrn_queue->avgtt / hrrn_queue->max_size);
+	printf("\nAverage Waiting Time:%f\n", hrrn_queue->avgwt / hrrn_queue->max_size);
+	printf("Average Turn Around Time:%f\n", hrrn_queue->avgtt / hrrn_queue->max_size);
+	printf("Average Response Time:%f\n", hrrn_queue->avgrt / hrrn_queue->max_size);
 	printText(hrrn_queue);
 	free(hrrn_queue);
 	return 0;

@@ -256,8 +256,6 @@ void update(){
     }
 }
 
-<<<<<<< HEAD
-=======
 // concatenate back to end of front string
 void fwrite_gantt(FILE * fp, char * tmp_buffer, int pid)
 {
@@ -330,7 +328,6 @@ void update_gantt(FILE * fp, char * tmp_buffer){
     }
 }
 
->>>>>>> 0e1b9d2f7736dc696d67bff6d071c3b88af3c967
 void cal_performance(Queue* result)
 {
     float tot_waiting_t = 0.0;
@@ -339,11 +336,8 @@ void cal_performance(Queue* result)
     float avg_waiting_t = 0.0;
     float avg_turnaround_t = 0.0;
     float avg_response_t = 0.0; 
-<<<<<<< HEAD
-=======
     float cpu_utilization = 0.0; 
     float throughput = 0.0; 
->>>>>>> 0e1b9d2f7736dc696d67bff6d071c3b88af3c967
     int total_count = result->count;   
     
     printf("\n");
@@ -359,12 +353,6 @@ void cal_performance(Queue* result)
     avg_waiting_t = tot_waiting_t/total_count;
     avg_turnaround_t = tot_turnaround_t/total_count;
     avg_response_t = tot_response_t/total_count;
-<<<<<<< HEAD
-
-    printf("avg waiting time: %.3f\n",avg_waiting_t);
-    printf("avg turnaround time: %.3f\n",avg_turnaround_t);
-    printf("avg response time: %.3f\n",avg_response_t);
-=======
     cpu_utilization = 1.0 - (float)idle_time/timer;
     throughput = (float)total_count/timer;
 
@@ -373,7 +361,6 @@ void cal_performance(Queue* result)
     printf("avg response time: %.3f sec\n",avg_response_t);
     printf("cpu utilization: %.3f\n",cpu_utilization);
     printf("throughput: %.3f (process/sec)\n",throughput);
->>>>>>> 0e1b9d2f7736dc696d67bff6d071c3b88af3c967
 }
 
 void new_input_read(char* filename) // not using const string, using parameter to read file
@@ -386,12 +373,8 @@ void new_input_read(char* filename) // not using const string, using parameter t
     FILE * fp;
     
     if ((fp = fopen(resource_path, "rb")) == NULL) {
-<<<<<<< HEAD
-        perror("file read failed\n");
-=======
         printf("file read failed : %s\n", resource_path);
         perror("");
->>>>>>> 0e1b9d2f7736dc696d67bff6d071c3b88af3c967
         return;
     }
     printf("\nCurrent txt file is : %s\n", filename); // debug option
@@ -410,39 +393,6 @@ void new_input_read(char* filename) // not using const string, using parameter t
     fclose(fp);
 }
 
-<<<<<<< HEAD
-int mainmainmainmainmain(){ // original main
-    init_queue(&ready_queue);
-    input_read();
-    while(timer < 160){
-        timer++;
-	    printf("current time is : %d\n", timer);
-        ready_sorted_enqueue();
-        // update_ready_queue(&ready_queue);
-        // update_running_task();
-        update();
-    }
-    // cal_performance(result_queue);
-    return 0;
-}
-
-// void report_completed_queue(Queue *queue)
-// {
-//     Node * cur = queue->front;
-//     printf("-----REPORT-----\n");
-//     while(!is_empty(queue))
-//     {
-//         TaskStatus data = dequeue(queue);
-//         printf("PID : %3d response : %5d turnaround : %5d waiting : %5d remain_burst : %5d\n",
-//             data.task.pid, data.response_t, data.turnaround_t, data.waiting_t, data.remain_burst_t);
-//         cur = cur->next;
-//     }
-//     printf("-----END-----\n\n");
-//     return;
-// }
-
-=======
->>>>>>> 0e1b9d2f7736dc696d67bff6d071c3b88af3c967
 int is_completed()
 {
     if(task_num == dequeued_task) // break loop when the number of tasks in txt file and dequeued task is same
@@ -470,8 +420,6 @@ int sim(char* filename){ // fix this later
     return 0;
 }
 
-<<<<<<< HEAD
-=======
 int sim_gantt(char* filename){ // only works in ./edf_task_data.txt
     task_num = 0; // trace the number of tasks in txt file
     dequeued_task = 0;
@@ -499,8 +447,6 @@ int sim_gantt(char* filename){ // only works in ./edf_task_data.txt
     return 0;
 }
 
-
->>>>>>> 0e1b9d2f7736dc696d67bff6d071c3b88af3c967
 int parse_file_name(char* filename) // return 1 if file name contains .txt  new
 {
 	strtok(filename, ".");
@@ -514,16 +460,10 @@ int parse_file_name(char* filename) // return 1 if file name contains .txt  new
 
 int main(void)
 {
-<<<<<<< HEAD
-    DIR *d;
-    struct dirent *dir;
-    d = opendir(".");
-=======
     char test_dir[] = "./edf_test";
     DIR *d;
     struct dirent *dir;
     d = opendir(test_dir);
->>>>>>> 0e1b9d2f7736dc696d67bff6d071c3b88af3c967
     if (d)
     {
         char * filename = malloc(sizeof(char) * 100);
@@ -532,14 +472,6 @@ int main(void)
             if(parse_file_name(dir->d_name)) // if the directory has a .txt file, then this is true
             {
                 memset(filename, 0, 100);
-<<<<<<< HEAD
-                strcat(filename, "./");
-                strcat(filename, dir->d_name);
-                strcat(filename, ".txt");
-                sim(filename);
-                timer = 0; // should report total time before this line
-            }
-=======
                 strcat(filename, "./edf_test/");
                 strcat(filename, dir->d_name);
                 strcat(filename, ".txt");
@@ -554,8 +486,6 @@ int main(void)
                 }
                 timer = 0; // should report total time before this line
             }
-
->>>>>>> 0e1b9d2f7736dc696d67bff6d071c3b88af3c967
         }
         free(filename);
     }

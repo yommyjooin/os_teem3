@@ -21,6 +21,7 @@ typedef struct Queue {
 	float hrr;	//Highest response ratio
 	float avgwt;	//Total wating time
 	float avgtt;	//Total turn-around time
+	float avgrt;	//Total response time
 
 	struct Node *front;
 	struct Node *rear;

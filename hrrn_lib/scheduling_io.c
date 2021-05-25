@@ -2,7 +2,7 @@
 
 //Parsing process information from text file
 int parseProcess(struct Queue *queue) {
-	printf("Opening data file from: %s...\n", INPUT_DATA_PATH);
+	printf("Opening data file from: \"%s\"...\n", INPUT_DATA_PATH);
 	char *resource_path = INPUT_DATA_PATH;
     	char buffer[MAX_LINE_LENGTH];
     	FILE * fp;
@@ -43,7 +43,7 @@ void printBursted(struct Process *p) {
 	
 	printf("%d\t\t%d\t\t", p->p_num, p->at);
 	printf("%d\t\t%d\t\t", p->bt, p->wt);
-	printf("%d\t\t%f\n", p->tt, p->ntt);
+	printf("%d\t\t%f\t\t%d\n", p->tt, p->ntt, p->rt);
 }
 
 void printText(struct Queue *queue) {
@@ -53,13 +53,13 @@ void printText(struct Queue *queue) {
 	strcat(path, OUTPUT_DATA_NAME);
 
 	if (mkdir(OUTPUT_DATA_DIR, 0755) == -1 && errno != EEXIST) {
-		printf("Can't create directory in: %s\nError detected: %s\n", OUTPUT_DATA_DIR, strerror(errno));
+		printf("Can't create directory in: \"%s\"\nError detected: %s\n", OUTPUT_DATA_DIR, strerror(errno));
 		return;
 	}
 	FILE *fp = fopen(path, "w+");
 	
 	if (fp == NULL) {
-		printf("Can't write gantt data in directory: %s\n", path);
+		printf("Can't write gantt data in directory: \"%s\"\n", path);
 		return;	
 	}
 
