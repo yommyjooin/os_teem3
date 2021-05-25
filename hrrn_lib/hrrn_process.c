@@ -21,4 +21,3 @@ void updateProcessInfo(struct Process *p, int cur_time) {
 	p->ntt = ((float)p->tt / p->bt); //Calculating normalized turn around time
 	p->completed = 1; //Updating completion of process
 }
-

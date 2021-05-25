@@ -12,4 +12,3 @@ typedef struct Process {
 
 struct Process *createProcess(int id, int at, int bt);
 void updateProcessInfo(struct Process *p, int cur_time);
-

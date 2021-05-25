@@ -8,7 +8,6 @@ typedef struct Node {
 
 	struct Node *next;
 	struct Process *p;
-
 } Node;
 
  
@@ -27,7 +26,6 @@ typedef struct Queue {
 	struct Node *rear;
 
 	char* data[];
-
 } Queue;
 
 void enqueue(struct Queue *queue, struct Node *new_node);

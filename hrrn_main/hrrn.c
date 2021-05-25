@@ -1,6 +1,7 @@
 #include "hrrn_queue.h"
 #include "scheduling_io.h"
 
+<<<<<<< HEAD
 
 
 int main() {

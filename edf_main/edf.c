@@ -256,6 +256,81 @@ void update(){
     }
 }
 
+<<<<<<< HEAD
+=======
+// concatenate back to end of front string
+void fwrite_gantt(FILE * fp, char * tmp_buffer, int pid)
+{
+    memset(tmp_buffer, 0, 1000);
+    sprintf(tmp_buffer, "%d ", pid);
+    int remain = pid / 10;
+    if(remain == 0)
+    {
+        fwrite(tmp_buffer, 2, 1, fp); // 1~9 + space
+    }
+    else if(remain < 10)
+    {
+        fwrite(tmp_buffer, 3, 1, fp); // 10~99 + space
+    }
+    else
+    {
+        fwrite(tmp_buffer, 4, 1, fp); // 100~ + space
+    }
+}
+
+void update_gantt(FILE * fp, char * tmp_buffer){
+    // 실행중인 task
+    TaskStatus * running_task_status = &ready_queue.front->data;
+    Node * curr = ready_queue.front;
+    if (is_empty(&ready_queue) == 1)
+    {
+        printf("%ds IDLE\n", timer);
+        idle_time += 1;
+        fwrite_gantt(fp, tmp_buffer, 0);
+        return;
+    }
+    else if (running_task_status->cpu_flag == 0)
+    {
+        running_task_status->cpu_flag = 1;
+        printf("%ds PID: %d CPU FLAG ON\n", timer - 1, running_task_status->task.pid);
+    }
+    running_task_status->remain_burst_t -= 1; // --> 이미 0임 (실행은 됐다)
+    running_task_status->turnaround_t += 1;
+
+    fwrite_gantt(fp, tmp_buffer, running_task_status->task.pid);
+
+    if (running_task_status->remain_burst_t <= 0)
+    {
+        printf("%ds PID: %d CPU BURST\n", timer, running_task_status->task.pid);
+        TaskStatus task = dequeue(&ready_queue);
+        sorted_enqueue(&result_queue, task); // debug
+        if (is_empty(&ready_queue)) return;
+        curr = ready_queue.front;
+    }
+    while(curr != NULL)
+    {
+        if (&curr->data != running_task_status || (&curr->data == running_task_status && running_task_status->cpu_flag == 0)){
+            curr->data.waiting_t += 1;
+            curr->data.turnaround_t += 1;
+        }
+        if (curr->data.cpu_flag == 0)
+            curr->data.response_t += 1;
+        
+        if (curr->data.deadline == timer)
+        {
+            printf("%ds PID: %d DEADLINE OVER\n", timer, curr->data.task.pid);
+            TaskStatus task = dequeue(&ready_queue); //
+            sorted_enqueue(&result_queue, task); // debug
+            curr = ready_queue.front;
+        }
+        else
+        {
+            curr = curr->next;
+        }
+    }
+}
+
+>>>>>>> 0e1b9d2f7736dc696d67bff6d071c3b88af3c967
 void cal_performance(Queue* result)
 {
     float tot_waiting_t = 0.0;
@@ -264,6 +339,11 @@ void cal_performance(Queue* result)
     float avg_waiting_t = 0.0;
     float avg_turnaround_t = 0.0;
     float avg_response_t = 0.0; 
+<<<<<<< HEAD
+=======
+    float cpu_utilization = 0.0; 
+    float throughput = 0.0; 
+>>>>>>> 0e1b9d2f7736dc696d67bff6d071c3b88af3c967
     int total_count = result->count;   
     
     printf("\n");
@@ -279,10 +359,21 @@ void cal_performance(Queue* result)
     avg_waiting_t = tot_waiting_t/total_count;
     avg_turnaround_t = tot_turnaround_t/total_count;
     avg_response_t = tot_response_t/total_count;
+<<<<<<< HEAD
 
     printf("avg waiting time: %.3f\n",avg_waiting_t);
     printf("avg turnaround time: %.3f\n",avg_turnaround_t);
     printf("avg response time: %.3f\n",avg_response_t);
+=======
+    cpu_utilization = 1.0 - (float)idle_time/timer;
+    throughput = (float)total_count/timer;
+
+    printf("avg waiting time: %.3f sec\n",avg_waiting_t);
+    printf("avg turnaround time: %.3f sec\n",avg_turnaround_t);
+    printf("avg response time: %.3f sec\n",avg_response_t);
+    printf("cpu utilization: %.3f\n",cpu_utilization);
+    printf("throughput: %.3f (process/sec)\n",throughput);
+>>>>>>> 0e1b9d2f7736dc696d67bff6d071c3b88af3c967
 }
 
 void new_input_read(char* filename) // not using const string, using parameter to read file
@@ -295,7 +386,12 @@ void new_input_read(char* filename) // not using const string, using parameter t
     FILE * fp;
     
     if ((fp = fopen(resource_path, "rb")) == NULL) {
+<<<<<<< HEAD
         perror("file read failed\n");
+=======
+        printf("file read failed : %s\n", resource_path);
+        perror("");
+>>>>>>> 0e1b9d2f7736dc696d67bff6d071c3b88af3c967
         return;
     }
     printf("\nCurrent txt file is : %s\n", filename); // debug option
@@ -314,6 +410,7 @@ void new_input_read(char* filename) // not using const string, using parameter t
     fclose(fp);
 }
 
+<<<<<<< HEAD
 int mainmainmainmainmain(){ // original main
     init_queue(&ready_queue);
     input_read();
@@ -344,6 +441,8 @@ int mainmainmainmainmain(){ // original main
 //     return;
 // }
 
+=======
+>>>>>>> 0e1b9d2f7736dc696d67bff6d071c3b88af3c967
 int is_completed()
 {
     if(task_num == dequeued_task) // break loop when the number of tasks in txt file and dequeued task is same
@@ -371,6 +470,37 @@ int sim(char* filename){ // fix this later
     return 0;
 }
 
+<<<<<<< HEAD
+=======
+int sim_gantt(char* filename){ // only works in ./edf_task_data.txt
+    task_num = 0; // trace the number of tasks in txt file
+    dequeued_task = 0;
+    init_queue(&ready_queue);
+    init_queue(&result_queue);
+    //input_read();
+    new_input_read(filename);
+
+    FILE * fp;
+    if((fp = fopen("./data/gantt/gantt.txt", "wb")) == -1)
+    {
+        perror("failed to open ./gantt.txt");
+        return -1;
+    }
+    char * tmp_buffer = (char*) malloc(sizeof(char) * 1000); // size is fixed 1000, size must be same with fwrite_gantt() - memset
+    while(is_completed())
+    {
+        timer++;
+	    //printf("current time is : %d\n", timer);
+        ready_sorted_enqueue();
+        update_gantt(fp, tmp_buffer); // automatically writes gantt.txt data
+    }
+    cal_performance(&result_queue);
+    free(tmp_buffer);
+    return 0;
+}
+
+
+>>>>>>> 0e1b9d2f7736dc696d67bff6d071c3b88af3c967
 int parse_file_name(char* filename) // return 1 if file name contains .txt  new
 {
 	strtok(filename, ".");
@@ -384,9 +514,16 @@ int parse_file_name(char* filename) // return 1 if file name contains .txt  new
 
 int main(void)
 {
+<<<<<<< HEAD
     DIR *d;
     struct dirent *dir;
     d = opendir(".");
+=======
+    char test_dir[] = "./edf_test";
+    DIR *d;
+    struct dirent *dir;
+    d = opendir(test_dir);
+>>>>>>> 0e1b9d2f7736dc696d67bff6d071c3b88af3c967
     if (d)
     {
         char * filename = malloc(sizeof(char) * 100);
@@ -395,12 +532,30 @@ int main(void)
             if(parse_file_name(dir->d_name)) // if the directory has a .txt file, then this is true
             {
                 memset(filename, 0, 100);
+<<<<<<< HEAD
                 strcat(filename, "./");
                 strcat(filename, dir->d_name);
                 strcat(filename, ".txt");
                 sim(filename);
                 timer = 0; // should report total time before this line
             }
+=======
+                strcat(filename, "./edf_test/");
+                strcat(filename, dir->d_name);
+                strcat(filename, ".txt");
+                if(strcmp(filename, "./edf_test/edf_task_data.txt") == 0)
+                {
+                    printf("--writing gantt--\n");
+                    sim_gantt(filename); // write txt data for gantt chart
+                }
+                else
+                {
+                    sim(filename);
+                }
+                timer = 0; // should report total time before this line
+            }
+
+>>>>>>> 0e1b9d2f7736dc696d67bff6d071c3b88af3c967
         }
         free(filename);
     }
