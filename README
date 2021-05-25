@@ -1,0 +1,10 @@
+Process Scheduler with HRRN and EDF algorithm.
+
+In the input text files, write process_id, arrival time, burst time for each process in each line. Each arguments are tokenized by blank. Be aware of not to leave blank lines in the end of files.
+The input text file for each algorithm must be located in data folder. File names must be hrrn_task_data.txt or edf_task_data.txt respectively, yet you can change it by edit header part of code.
+
+Gantt input text file must be located in data/gantt folder. You can set any kind of name for input file if its type is txt.
+
+***Executing HRRN, EDF, GANTT***
+1. Execute 'make' command in os_teem3 directory then executable file for hrrn, edf, gantt will be created.
+2. Execute command './hrrn', './edf', './gantt' in same directory.
