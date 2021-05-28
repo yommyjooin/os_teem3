@@ -26,14 +26,16 @@ int main() {
 		struct Process *target = moveCursor(hrrn_queue); //Getting hightest response ratio process
 
 		//If there are no terms with previous process
-		if (target->at <= hrrn_queue->cur_time) {
-			hrrn_queue->cur_time += target->bt; //Updating current time;
+		if (target->at >= hrrn_queue->cur_time) {
+			// printf("at: %d, cur_time: %d\n", target->at, hrrn_queue->cur_time);
+			hrrn_queue->cur_time = target->at + target->bt; //Updating current time;
 			prev_ended_time = hrrn_queue->cur_time; //Updating endtime of previous process
+			// printf("no term\n");
 		}
 		//If there are terms with previous process
 		else {
 			prev_ended_time = hrrn_queue->cur_time; //Updating endtime of previous process
-			hrrn_queue->cur_time = target->bt + target->at; //Updating current time;
+			hrrn_queue->cur_time += target->bt; //Updating current time;
 		}
 		updateProcessInfo(target, hrrn_queue->cur_time);
 
