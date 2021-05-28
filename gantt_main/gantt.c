@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <dirent.h>
 
-int total_time = 0;
+int total_time;
 char* pids;
 
 // parsing input txt file, then set total time
@@ -21,8 +21,8 @@ void parse_input(char* resource_path){
     fseek(fp, 0, SEEK_SET);
 
     // compute total time
-    total_time = file_size / 2;
-    printf("file size: %d, total time: %d\n", file_size, total_time);
+    total_time = (file_size - 1 )/ 2;
+    printf("file size: %d, total time: %d\n",file_size, total_time);
 
     // read file then save in buffer.
     while(fread(buffer, file_size, 1, fp) != 0){
