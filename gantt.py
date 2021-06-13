@@ -1,3 +1,4 @@
+#%%
 import plotly.figure_factory as ff
 import pandas as pd
 import os
@@ -5,6 +6,15 @@ import os
 pathdir = './data/gantt'
 files = os.listdir(pathdir)
 
+RED = 'rgb(255, 0, 0)'
+GREEN = 'rgb(0, 255, 0)'
+BLUE = 'rgb(0, 0, 255)'
+BLACK = 'rgb(100, 100, 100)'
+DARKGREEN = 'rgb(50, 100, 50)'
+DARKBLUE = 'rgb(100, 50, 50)'
+DARKRED = 'rgb(50, 50, 100)'
+
+colors = {'IDLE':'rgb(100, 100, 100)'}
 
 for filename in files:
     if filename.rfind('txt') < 0:
@@ -13,8 +23,10 @@ for filename in files:
     data = f.read()
     f.close()
 
-    data = data.replace(' ','')
+    #data = data.replace(' ',',')
+    data = data.split()
 
+    print(data)
     gantt_dict = []
     i = 0
     start = 0
@@ -28,27 +40,19 @@ for filename in files:
             pid = 'IDLE'
         else:
             pid = 'P' + data[i]
+            colors[pid] = DARKGREEN
 
         if data[i] != data[i+1]:
             finish = timer+1
             gantt_dict.append(dict(Task=pid, Start=start, Finish=finish, Resource=pid))
             start = finish
+
         if i == len(data)-2:
             finish = timer+2
             gantt_dict.append(dict(Task=pid, Start=start, Finish=finish, Resource=pid))
 
         timer+=1
         i+=1
-
-    colors = {'IDLE': 'rgb(100, 100, 100)',
-        'P1': 'rgb(255, 0, 0)',
-        'P2': 'rgb(0, 255, 0)',
-        'P3': 'rgb(0, 0, 255)',
-        'P4': 'rgb(255, 50, 50)',
-        'P5': 'rgb(50, 255, 50)',
-        'P6': 'rgb(50, 50, 255)'
-        }
-
     df = pd.DataFrame(gantt_dict)
     print(df)
 
@@ -57,5 +61,3 @@ for filename in files:
     fig.update_layout(title_text=filename, xaxis_type='linear')
     fig.show()
     # print(gantt_dict)
-
-
