@@ -99,6 +99,7 @@ struct Node *getNode(struct Queue *queue, int cursor) {
 struct Process *moveCursor(struct Queue *queue) {
 	queue->cursor = 0;
 	struct Node *cur_node = queue->front;
+	queue->hrr = 0;
 
 	float temp; //Response ratio of process in current node
 	int i = 0; //Index of process with highest reponse ratio
@@ -107,8 +108,7 @@ struct Process *moveCursor(struct Queue *queue) {
 
 		//Check if the process has arrived and incomplete
 		if (cur_node->p->at <= queue->cur_time && cur_node->p->completed != 1) {
-			
-			temp = (cur_node->p->bt + (queue->cur_time - cur_node->p->at)) / cur_node->p->bt;
+			temp = ((float)cur_node->p->bt + ((float)queue->cur_time - (float)cur_node->p->at) + 1) / (float)cur_node->p->bt;
 			
 			//Check if it is highest response ratio
 			if (queue->hrr < temp) {
